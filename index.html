@@ -28,7 +28,7 @@
     <script type="text/javascript">
       var myMap = L.map('mapid', {
         zoom: 10,
-        center: [3.747128, 108.685930],
+        center: [3.10617494, 101.68576184],
         // crs: L.CRS.EPSG4326, /* Default map projection is EPSG:3857. To display map in EPSG:4326, add crs L.CRS.EPSG4326. */
       });
       myMap.attributionControl.setPrefix('TM SmartMap © 2021 Telekom Malaysia')
@@ -44,6 +44,28 @@
           attribution: 'TM SmartMap © 2021 Telekom Malaysia'
         }
       ).addTo(myMap);
+      
+      L.Circle.include({
+        contains: function (latLng) {
+          return this.getLatLng().distanceTo(latLng) < this.getRadius();
+        }
+      });
+
+      L.marker([4.82819076, 100.70232948]).addTo(myMap);
+
+      const circle = L.circle([3.106, 101.689], radius, {
+        color: "red",
+        fillColor: "#f03",
+        fillOpacity: 0.5
+      }).addTo(myMap);
+
+      // https://embed.plnkr.co/UBrTJI/
+      myMap.on('click', function (e) {
+        var marker = L.marker(e.latlng).addTo(myMap);
+        var result = (circle.contains(marker.getLatLng())) ? 'inside': 'outside';
+        marker.bindPopup('Marker ' + result + ' of the circle');
+        marker.openPopup();
+      });
     </script>
   </body>
 </html>
