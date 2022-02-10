@@ -3,47 +3,78 @@
   <head>
     <meta charset="UTF-8" />
     <title>TM Map Example: Leaflet</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
       integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
-      crossorigin="" />
-    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
+      crossorigin=""
+    />
+    <script
+      src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
       integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
-      crossorigin=""></script>
+      crossorigin=""
+    ></script>
     <style>
-      body {
-        padding: 0;
-        margin: 0;
-      }
-      #mapid {
-        height: 100%;
-        width: 100%;
-        position: absolute;
-      }
+        #mapid {
+            height: 800px;
+            width: 800px;
+            position: absolute;
+            z-index: 1;
+        }
     </style>
   </head>
 
   <body>
     <div id="mapid"></div>
 
-    <script type="text/javascript">
-      var myMap = L.map('mapid', {
-        zoom: 4,
-        center: [3.747128, 108.685930],
+    <script>
+      var host = "https://www.smartmap.tm.com.my"
+      var api_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSkVOREVMQSBTUE9SQSIsImNyZWRpdElEIjoxOTQ1NiwicGFyZW50SUQiOjAsImlhdCI6MTYzNjM1ODM4MX0.haY3f6C_72il91VH0g6mloG_6-nbcSDxmiQoE3mSt0s"
+      var tm_attribution = "TM SmartMap © 2021 Telekom Malaysia"
+      var radius = 1000
+
+      /* initialize the map */
+      const myMap = L.map('mapid', {
+        zoom: 15,
+        center: [3.10617494, 101.68576184],
         // crs: L.CRS.EPSG4326, /* Default map projection is EPSG:3857. To display map in EPSG:4326, add crs L.CRS.EPSG4326. */
       });
       myMap.attributionControl.setPrefix('TM SmartMap © 2021 Telekom Malaysia')
-      const api_key = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSkVOREVMQSBTUE9SQSIsImNyZWRpdElEIjoxOTQ1NiwicGFyZW50SUQiOjAsImlhdCI6MTYzNjM1ODM4MX0.haY3f6C_72il91VH0g6mloG_6-nbcSDxmiQoE3mSt0s'
 
-      L.tileLayer(
-        `https://www.smartmap.tm.com.my/api/map/wmts?api_key=${api_key}&request={request}&layer={layer}&format={format}&TILEMATRIXSET={TILEMATRIXSET}&TILEMATRIX={TILEMATRIXSET}:{z}&TILEROW={y}&TILECOL={x}`,
+      var tmLayer = L.tileLayer(
+        `${host}/api/map/wmts?api_key=${api_key}&request={request}&layer={layer}&format={format}&TILEMATRIXSET={TILEMATRIXSET}&TILEMATRIX={TILEMATRIXSET}:{z}&TILEROW={y}&TILECOL={x}`,
         {
           request: "GetTile",
           layer: "Malaysia:TMOneSmartMap",
           format: "image/png",
           TILEMATRIXSET: "EPSG:3857",
-          attribution: 'TM SmartMap © 2021 Telekom Malaysia'
+          attribution: tm_attribution
         }
       ).addTo(myMap);
+
+      L.Circle.include({
+        contains: function (latLng) {
+          return this.getLatLng().distanceTo(latLng) < this.getRadius();
+        }
+      });
+
+      L.marker([4.82819076, 100.70232948]).addTo(myMap);
+
+      const circle = L.circle([3.106, 101.689], radius, {
+        color: "red",
+        fillColor: "#f03",
+        fillOpacity: 0.5
+      }).addTo(myMap);
+
+
+      // https://embed.plnkr.co/UBrTJI/
+      myMap.on('click', function (e) {
+        var marker = L.marker(e.latlng).addTo(myMap);
+        var result = (circle.contains(marker.getLatLng())) ? 'inside': 'outside';
+        marker.bindPopup('Marker ' + result + ' of the circle');
+        marker.openPopup();
+      });
+
     </script>
   </body>
 </html>
