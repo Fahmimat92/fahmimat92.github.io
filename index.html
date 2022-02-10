@@ -35,7 +35,7 @@
 
       /* initialize the map */
       const myMap = L.map('mapid', {
-        zoom: 15,
+        zoom: 20,
         center: [3.10617494, 101.68576184],
         // crs: L.CRS.EPSG4326, /* Default map projection is EPSG:3857. To display map in EPSG:4326, add crs L.CRS.EPSG4326. */
       });
@@ -63,7 +63,7 @@
       const circle = L.circle([3.106, 101.689], radius, {
         color: "red",
         fillColor: "#f03",
-        fillOpacity: 0.5
+        fillOpacity: 0.2
       }).addTo(myMap);
 
 
