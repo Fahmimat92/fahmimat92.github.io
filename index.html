@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>TM Map Example: Leaflet</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+      integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+      crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
+      integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+      crossorigin=""></script>
+    <style>
+      body {
+        padding: 0;
+        margin: 0;
+      }
+      #mapid {
+        height: 100%;
+        width: 100%;
+        position: absolute;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="mapid"></div>
+
+    <script type="text/javascript">
+      var myMap = L.map('mapid', {
+        zoom: 4,
+        center: [3.747128, 108.685930],
+        // crs: L.CRS.EPSG4326, /* Default map projection is EPSG:3857. To display map in EPSG:4326, add crs L.CRS.EPSG4326. */
+      });
+      myMap.attributionControl.setPrefix('TM SmartMap © 2021 Telekom Malaysia')
+      const api_key = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSkVOREVMQSBTUE9SQSIsImNyZWRpdElEIjoxOTQ1NiwicGFyZW50SUQiOjAsImlhdCI6MTYzNjM1ODM4MX0.haY3f6C_72il91VH0g6mloG_6-nbcSDxmiQoE3mSt0s'
+
+      L.tileLayer(
+        `https://www.smartmap.tm.com.my/api/map/wmts?api_key=${api_key}&request={request}&layer={layer}&format={format}&TILEMATRIXSET={TILEMATRIXSET}&TILEMATRIX={TILEMATRIXSET}:{z}&TILEROW={y}&TILECOL={x}`,
+        {
+          request: "GetTile",
+          layer: "Malaysia:TMOneSmartMap",
+          format: "image/png",
+          TILEMATRIXSET: "EPSG:3857",
+          attribution: 'TM SmartMap © 2021 Telekom Malaysia'
+        }
+      ).addTo(myMap);
+    </script>
+  </body>
+</html>
